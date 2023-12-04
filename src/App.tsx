@@ -117,7 +117,6 @@ export default function App() {
 					{
 						name: xAxisName,
 						type: chartType,
-						colorBy: "data",
 						data: yAxisRecords,
 					},
 				],
