@@ -14,6 +14,7 @@ export default memo(function Form({ onSubmit, bitable, tableId }: { onSubmit: Fu
 			form => ({
 				formItems: [
 					form.tableSelect("table", { label: "选择数据表" }),
+					form.viewSelect("view", { label: "选择视图", sourceTable: "table" }),
 					form.fieldSelect("xAxisField", { label: "X 轴字段", sourceTable: "table", multiple: false, filterByTypes: allowedXAxisFields }),
 					form.fieldSelect("dataFields", { label: "数据字段", sourceTable: "table", multiple: false, filterByTypes: allowedDataFields }),
 					form.select("chartType", {
@@ -39,6 +40,10 @@ export default memo(function Form({ onSubmit, bitable, tableId }: { onSubmit: Fu
 				buttons: ["确定"],
 			}),
 			async ({ key, values }) => {
+				if (!values.view) {
+					uiBuilder.message.warning("请选择视图");
+					return;
+				}
 				if (!(values.xAxisField && values.dataFields)) {
 					uiBuilder.message.warning("请选择 X 轴字段和数据字段");
 					return;

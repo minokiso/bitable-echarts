@@ -73,10 +73,11 @@ export default function App() {
 	const formSubmit = useCallback(async (formData: any) => {
 		setLoading(true);
 		try {
-			const [key, { table, xAxisField, dataFields, chartType, theme }] = formData;
-			let records = (await table.getRecords({ pageSize: 5000 })).records;
+			const [key, { table, view, xAxisField, dataFields, chartType, theme }] = formData;
+			let records = await Promise.all((await view.getVisibleRecordIdList()).map((recordId: string) => table.getRecordById(recordId)));
 			// console.log("getRecords", records);
 			let xAxisName = await xAxisField.getName();
+
 			let xAxisRecords = await getFieldValuesByRecords(records, xAxisField);
 			// console.log(xAxisRecords);
 
