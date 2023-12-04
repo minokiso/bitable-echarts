@@ -26,16 +26,16 @@ export default memo(function Form({ onSubmit, bitable, tableId }: { onSubmit: Fu
 						],
 						defaultValue: "bar",
 					}),
-					form.select("theme", {
-						label: "主题",
-						options: [
-							{ label: "默认", value: "default" },
-							{ label: "暗黑", value: "dark" },
-							{ label: "westeros", value: "westeros" },
-							{ label: "infographic", value: "infographic" },
-						],
-						defaultValue: "default",
-					}),
+					// form.select("theme", {
+					// 	label: "主题",
+					// 	options: [
+					// 		{ label: "默认", value: "default" },
+					// 		{ label: "暗黑", value: "dark" },
+					// 		{ label: "westeros", value: "westeros" },
+					// 		{ label: "infographic", value: "infographic" },
+					// 	],
+					// 	defaultValue: "default",
+					// }),
 				],
 				buttons: ["确定"],
 			}),
