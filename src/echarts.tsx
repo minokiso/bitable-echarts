@@ -3,7 +3,6 @@ import * as echarts from "echarts";
 import { Card, Space } from "antd";
 import { DownloadOutlined, RedoOutlined, ReloadOutlined } from "@ant-design/icons";
 export type EChartsOption = echarts.EChartsOption;
-
 export default memo(function EChartsComponent({ option }: { option: EChartsOption }) {
 	let chartDom: HTMLElement;
 	let chart: echarts.ECharts;
@@ -19,7 +18,7 @@ export default memo(function EChartsComponent({ option }: { option: EChartsOptio
 		chartDom = document.querySelector("#chart") as HTMLElement;
 		renderChart();
 		return () => {
-			chart?.dispose();
+			chart && chart.dispose();
 		};
 	}, [option]);
 
@@ -34,7 +33,9 @@ export default memo(function EChartsComponent({ option }: { option: EChartsOptio
 	});
 
 	let reload = () => {
-		chart && chart.setOption(option);
+		chart && chart.dispose();
+		chart = chartDom && echarts.init(chartDom);
+		chart.setOption(option);
 	};
 
 	// 导出单个图表图片
@@ -62,17 +63,17 @@ export default memo(function EChartsComponent({ option }: { option: EChartsOptio
 		}
 	}
 	return (
-		<Card
-			// title="Default size card"
-			extra={
-				<Space size={"middle"}>
-					<ReloadOutlined onClick={reload} title="重新加载" />
-					<DownloadOutlined onClick={exportImg} title="导出图片" />
-				</Space>
-			}
-			style={{ width: "90%", margin: "5%" }}
-		>
-			<div id="chart" style={{ height: "400px" }}></div>
-		</Card>
+		// <Card
+		// 	// title="Default size card"
+		// 	extra={
+		// 		<Space size={"middle"}>
+		// 			<ReloadOutlined onClick={reload} title="重新加载" />
+		// 			<DownloadOutlined onClick={exportImg} title="导出图片" />
+		// 		</Space>
+		// 	}
+		// 	style={{ width: "90%", margin: "5%" }}
+		// >
+		<div id="chart" style={{ height: "400px" }}></div>
+		// </Card>
 	);
 });

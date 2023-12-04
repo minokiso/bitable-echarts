@@ -76,29 +76,47 @@ export default function App() {
 			const [key, { table, xAxisField, dataFields, chartType, theme }] = formData;
 			let records = (await table.getRecords({ pageSize: 5000 })).records;
 			// console.log("getRecords", records);
-
+			let xAxisName = await xAxisField.getName();
 			let xAxisRecords = await getFieldValuesByRecords(records, xAxisField);
-			console.log(xAxisRecords);
+			// console.log(xAxisRecords);
 
 			let yAxisRecords = await getFieldValuesByRecords(records, dataFields);
-			console.log(yAxisRecords);
+			// console.log(yAxisRecords);
 
 			setOption({
 				// title: {
 				// 	text: "ECharts 入门示例",
 				// },
-				tooltip: {},
-				legend: {
-					data: [await xAxisField.getName()],
+				toolbox: {
+					show: true,
+					feature: {
+						magicType: {
+							type: ["line", "bar"],
+						},
+						restore: {},
+						saveAsImage: { pixelRatio: 2 },
+					},
 				},
+				tooltip: {
+					trigger: "axis",
+					axisPointer: {
+						type: "shadow",
+					},
+				},
+				legend: {},
 				xAxis: {
 					data: xAxisRecords,
+					axisPointer: {
+						show: true,
+					},
 				},
+
 				yAxis: {},
 				series: [
 					{
-						name: await xAxisField.getName(),
+						name: xAxisName,
 						type: chartType,
+						colorBy: "data",
 						data: yAxisRecords,
 					},
 				],
