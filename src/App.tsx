@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import EChartsComponent from "./echarts";
 import { DatasetForm, datasetFormSubmit } from "./dataset-form";
@@ -17,12 +17,12 @@ export default function App() {
 	const formSubmit = useCallback(async (formData: any) => {
 		setLoading(true);
 		try {
-			console.log(navi);
-
-			navi === "view" ? viewFormSubmit(formData, setOption) : datasetFormSubmit(formData, setOption);
-		} finally {
-			setLoading(false);
+			await viewFormSubmit(formData, setOption);
+			// navi === "view" ? viewFormSubmit(formData, setOption) : datasetFormSubmit(formData, setOption);
+		} catch (error) {
+			console.log(error);
 		}
+		setLoading(false);
 	}, []);
 
 	return (

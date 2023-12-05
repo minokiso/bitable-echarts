@@ -47,6 +47,8 @@ export const ViewForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 	};
 
 	useEffect(() => {
+		console.log("form builded");
+
 		const container: HTMLElement = document.querySelector("#container") as HTMLElement;
 		const uiBuilder = new UIBuilder(container, {
 			bitable,
@@ -55,6 +57,7 @@ export const ViewForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 		});
 		return () => {
 			uiBuilder.unmount();
+			console.log("form destroyed");
 		};
 	}, [translation]);
 

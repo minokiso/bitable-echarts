@@ -6,7 +6,7 @@ export type EChartsOption = echarts.EChartsOption;
 
 let theme: string;
 
-export default memo(function EChartsComponent({ option }: { option: EChartsOption }) {
+export default function EChartsComponent({ option }: { option: EChartsOption }) {
 	let chartDom: HTMLElement;
 	let chart: echarts.ECharts;
 	const renderChart = () => {
@@ -28,9 +28,9 @@ export default memo(function EChartsComponent({ option }: { option: EChartsOptio
 		const handleResize = () => {
 			chart && chart.resize();
 		};
-		window.addEventListener("resize", handleResize);
 		return () => {
 			window.removeEventListener("resize", handleResize);
+			chart && chart.dispose();
 		};
 	});
 
@@ -46,6 +46,7 @@ export default memo(function EChartsComponent({ option }: { option: EChartsOptio
 		theme = key;
 		reload(theme);
 	};
+
 	// 导出单个图表图片
 	// function exportImg() {
 	// 	var img = new Image();
@@ -87,4 +88,4 @@ export default memo(function EChartsComponent({ option }: { option: EChartsOptio
 			<div id="chart" style={{ height: "400px" }}></div>
 		</Card>
 	);
-});
+}
