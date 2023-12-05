@@ -19,7 +19,6 @@ export default function Navigation({ onNaviChange }: { onNaviChange: Function })
 	const [current, setCurrent] = useState("view");
 
 	const onClick: MenuProps["onClick"] = e => {
-		console.log("click ", e);
 		setCurrent(e.key);
 		onNaviChange(e.key);
 	};
