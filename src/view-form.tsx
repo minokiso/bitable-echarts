@@ -47,8 +47,6 @@ export const ViewForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 	};
 
 	useEffect(() => {
-		console.log("form builded");
-
 		const container: HTMLElement = document.querySelector("#container") as HTMLElement;
 		const uiBuilder = new UIBuilder(container, {
 			bitable,
@@ -57,7 +55,6 @@ export const ViewForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 		});
 		return () => {
 			uiBuilder.unmount();
-			console.log("form destroyed");
 		};
 	}, [translation]);
 
@@ -67,11 +64,7 @@ export const ViewForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 export const viewFormSubmit = async (formData: any, setOption: Function) => {
 	const [key, { table, view, xAxisField, dataFields, chartType }] = formData;
 	let records = await Promise.all((await view.getVisibleRecordIdList()).map((recordId: string) => table.getRecordById(recordId)));
-	// console.log("getRecords", records);
-	// let xAxisName = await xAxisField.getName();
 	let xAxisRecords = await getFieldValuesByRecords(records, xAxisField);
-	// console.log(xAxisRecords);
-	// console.log(dataFields);
 	let yAxisRecords = await Promise.all(dataFields.map((dataField: any) => getFieldValuesByRecords(records, dataField)));
 	let yAxisNames = await Promise.all(dataFields.map((dataField: any) => dataField.getName()));
 

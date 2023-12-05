@@ -49,7 +49,7 @@ export const DatasetForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bi
 
 export const datasetFormSubmit = async (formData: any, setOption: Function) => {
 	const [key, { table, chartType }] = formData;
-	let records = await table.getCellValueList();
+	let records = await table.getRecords();
 	console.log(records);
 
 	// setOption({

@@ -2,7 +2,12 @@ import { AppstoreOutlined, FundViewOutlined, MailOutlined, TableOutlined } from 
 import { Menu, MenuProps } from "antd";
 import { useState } from "react";
 
-const items: MenuProps["items"] = [
+export const naviItems: any = [
+	{
+		label: "3D 模式",
+		key: "three",
+		icon: <FundViewOutlined />,
+	},
 	{
 		label: "视图模式",
 		key: "view",
@@ -15,13 +20,13 @@ const items: MenuProps["items"] = [
 	},
 ];
 
-export default function Navigation({ onNaviChange }: { onNaviChange: Function }) {
-	const [current, setCurrent] = useState("view");
+export default function Navigation({ onNaviChange, current }: { onNaviChange: Function; current: string }) {
+	// const [current, setCurrent] = useState("three");
 
 	const onClick: MenuProps["onClick"] = e => {
-		setCurrent(e.key);
+		// setCurrent(e.key);
 		onNaviChange(e.key);
 	};
 
-	return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={items} />;
+	return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={naviItems} />;
 }

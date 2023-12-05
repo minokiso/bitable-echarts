@@ -9,6 +9,7 @@ let theme: string;
 export default function EChartsComponent({ option }: { option: EChartsOption }) {
 	let chartDom: HTMLElement;
 	let chart: echarts.ECharts;
+
 	const renderChart = () => {
 		if (!chart) {
 			chart = _echarts.init(chartDom, theme);
@@ -42,7 +43,7 @@ export default function EChartsComponent({ option }: { option: EChartsOption }) 
 		}
 	};
 
-	const onThemeChange: MenuProps["onClick"] = async ({ key }) => {
+	const onThemeChange: MenuProps["onClick"] = ({ key }) => {
 		theme = key;
 		reload(theme);
 	};
