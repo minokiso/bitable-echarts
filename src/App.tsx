@@ -76,18 +76,22 @@ export default function App() {
 			const [key, { table, view, xAxisField, dataFields, chartType, theme }] = formData;
 			let records = await Promise.all((await view.getVisibleRecordIdList()).map((recordId: string) => table.getRecordById(recordId)));
 			// console.log("getRecords", records);
-			let xAxisName = await xAxisField.getName();
+			// let xAxisName = await xAxisField.getName();
 
 			let xAxisRecords = await getFieldValuesByRecords(records, xAxisField);
 			// console.log(xAxisRecords);
+			// console.log(dataFields);
 
-			let yAxisRecords = await getFieldValuesByRecords(records, dataFields);
-			// console.log(yAxisRecords);
+			let yAxisRecords = await Promise.all(dataFields.map((dataField: any) => getFieldValuesByRecords(records, dataField)));
+			let yAxisNames = await Promise.all(dataFields.map((dataField: any) => dataField.getName()));
+			console.log(yAxisRecords);
 
 			setOption({
 				// title: {
 				// 	text: "ECharts 入门示例",
 				// },
+				// left: 0,
+				// right: 0,
 				toolbox: {
 					show: true,
 					feature: {
@@ -95,7 +99,7 @@ export default function App() {
 							type: ["line", "bar"],
 						},
 						restore: {},
-						saveAsImage: { pixelRatio: 2 },
+						saveAsImage: { pixelRatio: 2, name: yAxisNames.join("-") },
 					},
 				},
 				tooltip: {
@@ -111,15 +115,12 @@ export default function App() {
 						show: true,
 					},
 				},
-
-				yAxis: {},
-				series: [
-					{
-						name: xAxisName,
-						type: chartType,
-						data: yAxisRecords,
-					},
-				],
+				yAxis: yAxisRecords.map((record, i) => {
+					return { name: yAxisNames[i], axisLine: { show: true }, offset: Math.max(40 * (i - 1), 0), alignTicks: true };
+				}),
+				series: yAxisRecords.map((record, i) => {
+					return { name: yAxisNames[i], type: chartType, data: record, yAxisIndex: i };
+				}),
 			});
 		} finally {
 			// console.error(error.message);

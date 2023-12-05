@@ -16,7 +16,7 @@ export default memo(function Form({ onSubmit, bitable, tableId }: { onSubmit: Fu
 					form.tableSelect("table", { label: "选择数据表" }),
 					form.viewSelect("view", { label: "选择视图", sourceTable: "table" }),
 					form.fieldSelect("xAxisField", { label: "X 轴字段", sourceTable: "table", multiple: false, filterByTypes: allowedXAxisFields }),
-					form.fieldSelect("dataFields", { label: "数据字段", sourceTable: "table", multiple: false, filterByTypes: allowedDataFields }),
+					form.fieldSelect("dataFields", { label: "数据字段（建议不要超过3个）", sourceTable: "table", multiple: true, filterByTypes: allowedDataFields }),
 					form.select("chartType", {
 						label: "图表类型",
 						options: [
@@ -39,14 +39,17 @@ export default memo(function Form({ onSubmit, bitable, tableId }: { onSubmit: Fu
 				],
 				buttons: ["确定"],
 			}),
-			async ({ key, values }) => {
+			async ({ key, values }: any) => {
 				if (!values.view) {
-					uiBuilder.message.warning("请选择视图");
+					uiBuilder.message.error("请选择视图");
 					return;
 				}
 				if (!(values.xAxisField && values.dataFields)) {
-					uiBuilder.message.warning("请选择 X 轴字段和数据字段");
+					uiBuilder.message.error("请选择 X 轴字段和数据字段");
 					return;
+				}
+				if (values.dataFields.length > 3) {
+					uiBuilder.message.warning("您选择了超过3个数据字段，建议数据字段不要超过3个");
 				}
 				onSubmit([key, values]);
 			}
