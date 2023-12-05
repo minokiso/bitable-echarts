@@ -21,10 +21,7 @@ export const naviItems: any = [
 ];
 
 export default function Navigation({ onNaviChange, current }: { onNaviChange: Function; current: string }) {
-	// const [current, setCurrent] = useState("three");
-
 	const onClick: MenuProps["onClick"] = e => {
-		// setCurrent(e.key);
 		onNaviChange(e.key);
 	};
 
