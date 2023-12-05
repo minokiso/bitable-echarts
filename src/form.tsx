@@ -1,9 +1,9 @@
 import { memo, useEffect, useState } from "react";
 import { FieldType, UIBuilder } from "@lark-base-open/js-sdk";
 import { useTranslation, UseTranslationResponse } from "react-i18next";
-import { FIELDS } from "./App";
+import { FIELDS } from "./fields-meta";
 
-export default memo(function Form({ onSubmit, bitable, tableId }: { onSubmit: Function; bitable: any; tableId: string }) {
+export default memo(function Form({ onSubmit, bitable }: { onSubmit: Function; bitable: any }) {
 	const translation = useTranslation();
 
 	const allowedXAxisFields = FIELDS.getAllowedFields("X");
@@ -26,16 +26,6 @@ export default memo(function Form({ onSubmit, bitable, tableId }: { onSubmit: Fu
 						],
 						defaultValue: "bar",
 					}),
-					// form.select("theme", {
-					// 	label: "主题",
-					// 	options: [
-					// 		{ label: "默认", value: "default" },
-					// 		{ label: "暗黑", value: "dark" },
-					// 		{ label: "westeros", value: "westeros" },
-					// 		{ label: "infographic", value: "infographic" },
-					// 	],
-					// 	defaultValue: "default",
-					// }),
 				],
 				buttons: ["确定"],
 			}),
