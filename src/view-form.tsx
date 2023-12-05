@@ -1,9 +1,9 @@
 import { memo, useEffect, useState } from "react";
 import { FieldType, UIBuilder } from "@lark-base-open/js-sdk";
 import { useTranslation, UseTranslationResponse } from "react-i18next";
-import { FIELDS } from "./fields-meta";
+import { FIELDS, getFieldValuesByRecords } from "./fields-meta";
 
-export default memo(function Form({ onSubmit, bitable }: { onSubmit: Function; bitable: any }) {
+export const ViewForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitable: any }) => {
 	const translation = useTranslation();
 
 	const allowedXAxisFields = FIELDS.getAllowedFields("X");
@@ -60,3 +60,47 @@ export default memo(function Form({ onSubmit, bitable }: { onSubmit: Function; b
 
 	return <div id="container"></div>;
 });
+
+export const viewFormSubmit = async (formData: any, setOption: Function) => {
+	const [key, { table, view, xAxisField, dataFields, chartType }] = formData;
+	let records = await Promise.all((await view.getVisibleRecordIdList()).map((recordId: string) => table.getRecordById(recordId)));
+	// console.log("getRecords", records);
+	// let xAxisName = await xAxisField.getName();
+	let xAxisRecords = await getFieldValuesByRecords(records, xAxisField);
+	// console.log(xAxisRecords);
+	// console.log(dataFields);
+	let yAxisRecords = await Promise.all(dataFields.map((dataField: any) => getFieldValuesByRecords(records, dataField)));
+	let yAxisNames = await Promise.all(dataFields.map((dataField: any) => dataField.getName()));
+
+	setOption({
+		toolbox: {
+			show: true,
+			feature: {
+				magicType: {
+					type: ["line", "bar"],
+				},
+				restore: {},
+				saveAsImage: { pixelRatio: 2, name: yAxisNames.join("-") },
+			},
+		},
+		tooltip: {
+			trigger: "axis",
+			axisPointer: {
+				type: "shadow",
+			},
+		},
+		legend: {},
+		xAxis: {
+			data: xAxisRecords,
+			axisPointer: {
+				show: true,
+			},
+		},
+		yAxis: yAxisRecords.map((record, i) => {
+			return { name: yAxisNames[i], axisLine: { show: true }, offset: Math.max(40 * (i - 1), 0), alignTicks: true };
+		}),
+		series: yAxisRecords.map((record, i) => {
+			return { name: yAxisNames[i], type: chartType, data: record, yAxisIndex: i };
+		}),
+	});
+};
