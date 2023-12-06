@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { FieldType, UIBuilder } from "@lark-base-open/js-sdk";
 import { useTranslation, UseTranslationResponse } from "react-i18next";
-import { FIELDS, getFieldValuesByRecords } from "./fields-meta";
+import { FIELDS, getFieldValuesByRecords } from "../metas/fields-meta";
 
 export const DatasetForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitable: any }) => {
 	const translation = useTranslation();

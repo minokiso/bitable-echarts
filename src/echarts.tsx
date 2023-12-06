@@ -1,7 +1,7 @@
 import { memo, useEffect } from "react";
 import { Card, Dropdown, MenuProps, Space } from "antd";
 import { ReloadOutlined, SkinOutlined } from "@ant-design/icons";
-import { _echarts, themes } from "./theme-meta";
+import { _echarts, themes } from "./metas/theme-meta";
 export type EChartsOption = echarts.EChartsOption;
 
 let theme: string;

@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import EChartsComponent from "./echarts";
-import { DatasetForm, datasetFormSubmit } from "./dataset-form";
+import { DatasetForm, datasetFormSubmit } from "./forms/dataset-form";
 import { bitable } from "@lark-base-open/js-sdk";
 import { Spin } from "antd";
 import Navigation from "./navigation";
-import { ViewForm, viewFormSubmit } from "./view-form";
-import { ThreeDForm, threeDFormSubmit } from "./three-d-form";
+import { ViewForm, viewFormSubmit } from "./forms/view-form";
+import { ThreeDForm, threeDFormSubmit } from "./forms/three-d-form";
 
 // import './i18n'; // 取消注释以启用国际化
 
