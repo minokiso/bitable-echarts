@@ -105,13 +105,18 @@ export const threeDFormSubmit = async (formData: any, setOption: Function) => {
 			},
 		},
 		xAxis3D: {
-			// type: FIELDS[xAxisFieldMeta.type].axisType,
-			type: "category",
+			type: FIELDS[xAxisFieldMeta.type].axisType,
+			// type: "category",
+			min: "dataMin",
+			max: "dataMax",
+
 			name: xAxisFieldMeta.name,
 		},
 		yAxis3D: {
-			type: "category",
-			// type: FIELDS[yAxisFieldMeta.type].axisType,
+			// type: "category",
+			min: "dataMin",
+			max: "dataMax",
+			type: FIELDS[yAxisFieldMeta.type].axisType,
 			name: yAxisFieldMeta.name,
 		},
 		zAxis3D: {

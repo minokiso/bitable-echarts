@@ -9,12 +9,22 @@ import { ViewForm, viewFormSubmit } from "./forms/view-form";
 import { ThreeDForm, threeDFormSubmit } from "./forms/three-d-form";
 
 // import './i18n'; // 取消注释以启用国际化
+let selectedCell;
+const off = bitable.base.onSelectionChange((event: any) => {
+	console.log("current selection", event);
+});
+export function getSelection() {
+	return bitable.base.getSelection();
+}
+
+export function getActiveTable() {
+	return bitable.base.getActiveTable();
+}
 
 export default function App() {
 	let [option, setOption] = useState({});
 	let [loading, setLoading] = useState(false);
 	let [navi, setNavi] = useState("three");
-
 	const formSubmit = useCallback(
 		async (formData: any) => {
 			setLoading(true);
