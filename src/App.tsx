@@ -9,10 +9,6 @@ import { ViewForm, viewFormSubmit } from "./forms/view-form";
 import { ThreeDForm, threeDFormSubmit } from "./forms/three-d-form";
 
 // import './i18n'; // 取消注释以启用国际化
-let selectedCell;
-const off = bitable.base.onSelectionChange((event: any) => {
-	console.log("current selection", event);
-});
 export function getSelection() {
 	return bitable.base.getSelection();
 }
@@ -29,7 +25,7 @@ export default function App() {
 		async (formData: any) => {
 			setLoading(true);
 			try {
-				await componentsMap[navi].formSubmit(formData, setOption);
+				await formMap[navi].formSubmit(formData, setOption);
 			} catch (error) {
 				console.log(error);
 			}
@@ -38,7 +34,7 @@ export default function App() {
 		[navi]
 	);
 
-	const componentsMap: any = {
+	const formMap: any = {
 		three: {
 			component: <ThreeDForm onSubmit={formSubmit} bitable={bitable}></ThreeDForm>,
 			formSubmit: threeDFormSubmit,
@@ -57,7 +53,7 @@ export default function App() {
 		<>
 			<Navigation onNaviChange={setNavi} current={navi}></Navigation>
 			<Spin spinning={loading}>
-				{componentsMap[navi].component}
+				{formMap[navi].component}
 				<EChartsComponent option={option}></EChartsComponent>
 			</Spin>
 		</>

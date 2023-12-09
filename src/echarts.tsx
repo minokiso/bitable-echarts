@@ -114,12 +114,12 @@ export default function EChartsComponent({ option }: { option: EChartsOption }) 
 			extra={
 				<Space size={"middle"}>
 					<Dropdown menu={{ items: themes, onClick: onThemeChange, selectable: true, defaultSelectedKeys: ["default"] }} trigger={["click"]}>
-						<Button type="dashed" size={"small"} icon={<SkinOutlined />} onClick={e => e.preventDefault()}></Button>
+						<Button type="text" size={"small"} icon={<SkinOutlined />} onClick={e => e.preventDefault()}></Button>
 					</Dropdown>
-					<Button type="dashed" size={"small"} title="重新加载" icon={<ReloadOutlined />} onClick={() => reload(theme)}></Button>
+					<Button type="text" size={"small"} title="重新加载" icon={<ReloadOutlined />} onClick={() => reload(theme)}></Button>
 					<Tooltip title="请选择一个空的附件单元格，将图片插入其中，">
 						{/* <Dropdown menu={{ items: themes}}> */}
-						<Button type="dashed" size={"small"} icon={<VerticalAlignBottomOutlined />} onClick={insertInto}></Button>
+						<Button type="text" size={"small"} icon={<VerticalAlignBottomOutlined />} onClick={insertInto}></Button>
 						{/* </Dropdown> */}
 					</Tooltip>
 				</Space>
