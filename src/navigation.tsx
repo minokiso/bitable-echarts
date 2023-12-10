@@ -1,6 +1,5 @@
-import { AppstoreOutlined, FundViewOutlined, MailOutlined, TableOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, FundViewOutlined, HeatMapOutlined, MailOutlined, QuestionCircleOutlined, TableOutlined } from "@ant-design/icons";
 import { Menu, MenuProps } from "antd";
-import { useState } from "react";
 
 export const naviItems: any = [
 	{
@@ -9,14 +8,14 @@ export const naviItems: any = [
 		icon: <FundViewOutlined />,
 	},
 	{
-		label: "视图模式",
+		label: "2D 模式",
 		key: "view",
 		icon: <FundViewOutlined />,
 	},
 	{
-		label: "数据集模式",
-		key: "dataset",
-		icon: <TableOutlined />,
+		label: "热力图模式",
+		key: "heat",
+		icon: <HeatMapOutlined />,
 	},
 ];
 

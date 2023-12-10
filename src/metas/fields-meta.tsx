@@ -1,5 +1,5 @@
 import { FieldType } from "@lark-base-open/js-sdk";
-
+import { time } from "echarts";
 export const FIELDS: any = {
 	[FieldType.Text]: {
 		getCellValue: (record: any, field: any) => record.fields[typeof field === "string" ? field : getFieldId(field)]?.[0].text,
@@ -16,11 +16,7 @@ export const FIELDS: any = {
 			if (!timeStamp) {
 				return;
 			}
-			let date = new Date(timeStamp);
-			let day = date.getDate();
-			let month = date.getMonth() + 1; // 月份是从 0 开始的
-			let year = date.getFullYear();
-			return `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
+			return time.format(timeStamp, "{yyyy}-{MM}-{dd}", false);
 		},
 		X: true,
 		Y: true,
@@ -56,7 +52,7 @@ export function getFieldId(field: any): string {
 	return field.context[1];
 }
 
-// 用官方的 table.getCellValue 方法获取一列字段的值，字段的值中可能有列表
+// 用官方的 table.getCellValue 方法获取一列字段的值，字段的值中可能有数组
 export function getFieldValues(records: any, table: any, field: any): Promise<any[]> {
 	return Promise.all(records.map((record: any) => table.getCellValue(field.context[1], record.recordId)));
 }
@@ -66,7 +62,22 @@ export function getFieldValuesByRecords(records: any[], field: any): Promise<any
 	return Promise.all(records.map(async record => FIELDS[await field.getType()].getCellValue(record, field)));
 }
 
-// 返回一个视图中的记录组成的列表，记录中包括未被处理的值
+// 返回一个视图中的记录嵌套记录的值的二维数组，记录中包括未被处理的值
 export async function getViewRecords(view: any, table: any): Promise<any[]> {
 	return Promise.all((await view.getVisibleRecordIdList()).map((recordId: string) => table.getRecordById(recordId)));
+}
+
+export async function getViewRecordsCellString(view: any, table: any, fieldMetaList: any) {
+	let _records = [];
+
+	for (let recordId of await view.getVisibleRecordIdList()) {
+		_records.push(
+			await Promise.all(
+				fieldMetaList.map((meta: any) => {
+					return table.getCellString(meta.id, recordId);
+				})
+			)
+		);
+	}
+	return _records;
 }

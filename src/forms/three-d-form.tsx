@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { FieldType, UIBuilder } from "@lark-base-open/js-sdk";
 import { useTranslation, UseTranslationResponse } from "react-i18next";
-import { FIELDS, getFieldId, getFieldValuesByRecords, getViewRecords } from "../metas/fields-meta";
+import { FIELDS, getFieldId, getFieldValuesByRecords, getViewRecords, getViewRecordsCellString } from "../metas/fields-meta";
 import "echarts-gl";
 // issue: https://github.com/apache/echarts/issues/18476
 
@@ -87,9 +87,9 @@ export const threeDFormSubmit = async (formData: any, setOption: Function) => {
 					maxZValue = Math.max(maxZValue, cellValue);
 					minZValue = Math.min(minZValue, cellValue);
 				}
-				_record.push(cellValue);
+				_record.push(cellValue || "-");
 			} else {
-				_record.push("暂不支持显示");
+				_record.push("-");
 			}
 		});
 		recordsValue.push(_record);

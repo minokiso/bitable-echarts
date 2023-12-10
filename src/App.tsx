@@ -1,13 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import EChartsComponent from "./echarts";
-import { DatasetForm, datasetFormSubmit } from "./forms/dataset-form";
 import { bitable } from "@lark-base-open/js-sdk";
-import { Spin } from "antd";
+import { ConfigProvider, Spin } from "antd";
 import Navigation from "./navigation";
 import { ViewForm, viewFormSubmit } from "./forms/view-form";
 import { ThreeDForm, threeDFormSubmit } from "./forms/three-d-form";
+import { HeatForm, heatFormSubmit } from "./forms/heat-form";
+import zhCN from "antd/locale/zh_CN";
+import "dayjs/locale/zh-cn";
+import dayjs from "dayjs";
 
+dayjs.locale("en");
 // import './i18n'; // 取消注释以启用国际化
 export function getSelection() {
 	return bitable.base.getSelection();
@@ -43,19 +47,19 @@ export default function App() {
 			component: <ViewForm onSubmit={formSubmit} bitable={bitable}></ViewForm>,
 			formSubmit: viewFormSubmit,
 		},
-		dataset: {
-			component: <DatasetForm onSubmit={formSubmit} bitable={bitable}></DatasetForm>,
-			formSubmit: datasetFormSubmit,
+		heat: {
+			component: <HeatForm onSubmit={formSubmit} bitable={bitable}></HeatForm>,
+			formSubmit: heatFormSubmit,
 		},
 	};
 
 	return (
-		<>
+		<ConfigProvider locale={zhCN}>
 			<Navigation onNaviChange={setNavi} current={navi}></Navigation>
 			<Spin spinning={loading}>
 				{formMap[navi].component}
 				<EChartsComponent option={option}></EChartsComponent>
 			</Spin>
-		</>
+		</ConfigProvider>
 	);
 }
