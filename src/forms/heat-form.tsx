@@ -3,14 +3,17 @@ import { FieldType, UIBuilder } from "@lark-base-open/js-sdk";
 import { useTranslation, UseTranslationResponse } from "react-i18next";
 import { FIELDS, getFieldValuesByRecords, getViewRecords } from "../metas/fields-meta";
 import { DatePicker, Select } from "antd";
+import dayjs from "dayjs";
 
 const allowedXAxisFields = FIELDS.getAllowedFields("X");
 const allowedDateAxisFields = [FieldType.DateTime];
 const allowedHeatFields = FIELDS.getAllowedFields("Z");
-const { RangePicker } = DatePicker;
+// const { RangePicker } = DatePicker;
+// let dateRange: any;
+// let dateStringRange: any;
 export const HeatForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitable: any }) => {
 	let [type, setType] = useState("normal");
-	let [dateRange, setDateRange] = useState(["", ""]);
+	// let [dateRange, setDateRange] = useState<string[] | null[]>([null, null]);
 	const translation = useTranslation();
 	const heatFormBuilder = async (uiBuilder: UIBuilder, { t }: UseTranslationResponse<"translation", undefined>) => {
 		uiBuilder.form(
@@ -54,10 +57,10 @@ export const HeatForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 					return;
 				}
 				if (!(values.dateField && values.heatField)) {
-					uiBuilder.message.error(`请选择日期字段、热度字段、日期范围`);
+					uiBuilder.message.error(`请选择日期字段、热度字段`);
 					return;
 				}
-				onSubmit([key, values, dateRange]);
+				onSubmit([key, values]);
 			}
 		);
 	};
@@ -88,38 +91,28 @@ export const HeatForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 					style={{ width: "100%", marginTop: "1rem" }}
 				/>
 			</div>
-			{type === "date" ? (
-				<div style={{ margin: "1.5rem" }}>
-					选择日期范围
-					<RangePicker
-						onChange={(_, dateString) => {
-							setDateRange(dateString);
-						}}
-						picker="month"
-						popupStyle={{ width: "400px" }}
-						style={{ width: "100%", marginTop: "1rem" }}
-					/>
-				</div>
-			) : (
-				<></>
-			)}
 			<div id="container"></div>
 		</>
 	);
 });
 
 export const heatFormSubmit = async (formData: any, setOption: Function) => {
-	const [key, { table, view, xAxisField, yAxisField, heatField, dateField }, dateRange] = formData;
-	dateField ? await handleDate(table, dateField, heatField, dateRange, setOption) : await handleHeat(table, view, xAxisField, yAxisField, heatField, setOption);
+	const [key, { table, view, xAxisField, yAxisField, heatField, dateField }] = formData;
+	dateField ? await handleDate(table, dateField, heatField, setOption) : await handleHeat(table, view, xAxisField, yAxisField, heatField, setOption);
 };
 
-async function handleDate(table: any, dateField: any, heatField: any, dateRange: any, setOption: any) {
+async function handleDate(table: any, dateField: any, heatField: any, setOption: any) {
 	let records = (await table.getRecords({ pageSize: 5000 })).records;
-	let [dateFieldMeta, heatFieldMeta] = [await dateField.getMeta(), heatField.getMeta()];
+	let [dateFieldMeta, heatFieldMeta] = [await dateField.getMeta(), await heatField.getMeta()];
+
 	let originHeat = FIELDS[heatFieldMeta.type].getCellValue(records[0], heatField);
+	let originDate = FIELDS[dateFieldMeta.type].getCellValue(records[0], dateField)?.slice(0, 4);
+
 	let maxHeat = originHeat;
 	let minHeat = originHeat;
-	let dataset: any = [];
+	let maxDate = originDate;
+	let minDate = originDate;
+	let dataset: any = {};
 
 	for (let record of records) {
 		let heat = FIELDS[heatFieldMeta.type].getCellValue(record, heatField);
@@ -127,12 +120,59 @@ async function handleDate(table: any, dateField: any, heatField: any, dateRange:
 			maxHeat = Math.max(maxHeat, heat);
 			minHeat = Math.min(minHeat, heat);
 		}
-		console.log(FIELDS[dateFieldMeta.type]);
-
 		let date = FIELDS[dateFieldMeta.type].getCellValue(record, dateField);
-		dataset.push([date, heat]);
+
+		if (date) {
+			let year = Number(date.slice(0, 4));
+			maxDate = maxDate ? Math.max(Number(maxDate), year) : year;
+			minDate = minDate ? Math.min(Number(minDate), year) : year;
+			if (!(year in dataset)) {
+				dataset[year] = [[date, heat]];
+			} else {
+				dataset[year].push([date, heat]);
+			}
+		}
 	}
-	console.log(dataset);
+	let years = Object.keys(dataset);
+	setOption({
+		tooltip: {
+			position: "top",
+		},
+		visualMap: {
+			min: minHeat,
+			max: maxHeat,
+			calculable: true,
+			orient: "horizontal",
+			left: "center",
+			bottom: "bottom",
+			align: "top",
+			itemWidth: 8,
+		},
+		toolbox: {
+			show: true,
+			feature: {
+				saveAsImage: { pixelRatio: 2 },
+			},
+			left: 5,
+		},
+		calendar: years.map((year, i) => {
+			return {
+				top: 20 + (370 / years.length) * i,
+				right: 5,
+				range: year,
+				cellSize: ["auto", 40 / years.length],
+			};
+		}),
+		series: years.map((year, i) => {
+			return {
+				type: "heatmap",
+				coordinateSystem: "calendar",
+				calendarIndex: i,
+				data: dataset[year],
+				name: heatFieldMeta.name,
+			};
+		}),
+	});
 }
 
 async function handleHeat(table: any, view: any, xAxisField: any, yAxisField: any, heatField: any, setOption: any) {
@@ -149,8 +189,8 @@ async function handleHeat(table: any, view: any, xAxisField: any, yAxisField: an
 		let yCellValue = FIELDS[yAxisFieldMeta.type].getCellValue(record, yAxisField);
 		let heat = FIELDS[heatFieldMeta.type].getCellValue(record, heatField);
 		if (heat) {
-			maxHeat = Math.max(maxHeat, heat);
-			minHeat = Math.min(minHeat, heat);
+			maxHeat = maxHeat ? Math.max(maxHeat, heat) : heat;
+			minHeat = minHeat ? Math.min(minHeat, heat) : heat;
 		}
 		if (!(xCellValue in xAxisMap)) {
 			xAxisMap[xCellValue] = Object.keys(xAxisMap).length;
