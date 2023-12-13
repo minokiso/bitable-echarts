@@ -142,7 +142,6 @@ export const threeDFormSubmit = async (formData: any, setOption: Function) => {
 					x: xAxisFieldMeta.name,
 					y: yAxisFieldMeta.name,
 					z: zAxisFieldMeta.name,
-					tooltip: fieldMetaList.map((fieldMeta: any) => fieldMeta.name),
 				},
 			},
 		],

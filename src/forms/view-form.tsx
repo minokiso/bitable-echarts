@@ -7,7 +7,7 @@ export const ViewForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitab
 	const translation = useTranslation();
 
 	const allowedXAxisFields = FIELDS.getAllowedFields("X");
-	const allowedDataFields = FIELDS.getAllowedFields("");
+	const allowedDataFields = FIELDS.getAllowedFields("Z");
 
 	const callback = async (uiBuilder: UIBuilder, { t }: UseTranslationResponse<"translation", undefined>) => {
 		uiBuilder.form(

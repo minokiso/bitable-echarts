@@ -8,12 +8,9 @@ import dayjs from "dayjs";
 const allowedXAxisFields = FIELDS.getAllowedFields("X");
 const allowedDateAxisFields = [FieldType.DateTime];
 const allowedHeatFields = FIELDS.getAllowedFields("Z");
-// const { RangePicker } = DatePicker;
-// let dateRange: any;
-// let dateStringRange: any;
+
 export const HeatForm = memo(({ onSubmit, bitable }: { onSubmit: Function; bitable: any }) => {
 	let [type, setType] = useState("normal");
-	// let [dateRange, setDateRange] = useState<string[] | null[]>([null, null]);
 	const translation = useTranslation();
 	const heatFormBuilder = async (uiBuilder: UIBuilder, { t }: UseTranslationResponse<"translation", undefined>) => {
 		uiBuilder.form(
@@ -129,7 +126,7 @@ async function handleDate(table: any, dateField: any, heatField: any, setOption:
 			if (!(year in dataset)) {
 				dataset[year] = [[date, heat]];
 			} else {
-				dataset[year].push([date, heat]);
+				dataset[year].push([date, heat || "-"]);
 			}
 		}
 	}

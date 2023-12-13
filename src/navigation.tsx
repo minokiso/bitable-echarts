@@ -17,11 +17,16 @@ export const naviItems: any = [
 		key: "heat",
 		icon: <HeatMapOutlined />,
 	},
+	{
+		label: "帮助文档",
+		key: "help",
+		icon: <QuestionCircleOutlined />,
+	},
 ];
 
 export default function Navigation({ onNaviChange, current }: { onNaviChange: Function; current: string }) {
 	const onClick: MenuProps["onClick"] = e => {
-		onNaviChange(e.key);
+		e.key !== "help" ? onNaviChange(e.key) : window.open("https://smuport.feishu.cn/docx/VbuhdiyFwo4PZyxqCuycGipsnYd?from=from_copylinkwww.baidu.com");
 	};
 
 	return <Menu onClick={onClick} selectedKeys={[current]} mode="horizontal" items={naviItems} />;
